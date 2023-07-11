@@ -25,6 +25,10 @@ This is the first Slack bot/app that I have created and was also my first time w
 
 It wasn't until I started setting up the my redirect links, event subscription URLs, and handling the [OAuth 2.0](https://api.slack.com/legacy/oauth) process that I ran into some issues. I ended up starting over and using Python instead. From here, I created AWS lambda functions, each with an API Gateway trigger, for the event subscription request URL, slash commands, and the requried OAuth redirect URL needed for distribution. The third one was the trickiest. 
 
-I had to create a DynamoDB table to store Slack workspace ID's for each user that installed the app. These ID's were saved and retrieved within my OAuth lambda function. This was my first time working with AWS DynamoDB, so it took quite some time to research and learn how to use (primary keys and sort keys can be a big issue when `get_item()`). I ended up using the `scan()` function to access my DynamoDB table, but will change this in future to improve runtime (scan is not the best way to access items, as it will look at everything within the table). On a more positive note, I fell in love with the AWS Cloudwatch logs! They helped me debug all of my lambda functions!
+I had to create a DynamoDB table to store Slack workspace ID's for each user that installed the app. These ID's were saved and retrieved within my OAuth lambda function. 
+<hr>
+<img src="table.png" height="150"></img>
+<hr>
+This was my first time working with AWS DynamoDB, so it took quite some time to research and learn how to use (primary keys and sort keys can be a big issue when `get_item()`). I ended up using the `scan()` function to access my DynamoDB table, but will change this in future to improve runtime (scan is not the best way to access items, as it will look at everything within the table). On a more positive note, I fell in love with the AWS Cloudwatch logs! They helped me debug all of my lambda functions!
 
 All in all, this project was really fun and I'm happy that it will be used by colleagues to help improve productivity. It can be easily added to and modified if needed. Check out the [Slack API](https://api.slack.com/legacy/oauth) if you want to get started on your own bot/app!
