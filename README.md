@@ -5,11 +5,6 @@
 </p>
 <p align="center">A scalable slack bot hosted on AWS that can send messages to multiple channels at once! More functionality coming soon!     </p>
 
-## Installation
-Click the button below to install Kiki to your Slack workspace!
-
-<a href="https://slack.com/oauth/v2/authorize?client_id=5381919863447.5528567557024&scope=channels:history,chat:write,commands,groups:history,im:history&user_scope="><img alt="Add to Slack" height="35" width="120" src="https://platform.slack-edge.com/img/add_to_slack.png" srcSet="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" /></a>
-
 ## Usage
 Send a message to any number of Slack channels with the `/ki-send` command.
 Syntax: `/ki-send #channel-n Hello there!`
