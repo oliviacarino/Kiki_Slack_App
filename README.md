@@ -20,6 +20,8 @@ This is the first Slack bot/app that I have created and was also my first time w
 
 It wasn't until I started setting up the my redirect links, event subscription URLs, and handling the [OAuth 2.0](https://api.slack.com/legacy/oauth) process that I ran into some issues. I ended up starting over and using Python instead. From here, I created AWS lambda functions, each with an API Gateway trigger, for the event subscription request URL, slash commands, and the requried OAuth redirect URL needed for distribution. The third one was the trickiest. 
 
+I also ran into an `operation_timeout` issue when trying to use my slash command with more than 3 channels. This is because the Slack API expects a response after 3 seconds. Squishing all of my code within one Lambda function caused it to take >3 seconds. To fix this, I broke my code up into receiver and worker functions. The former acknowledges the Slash command event and sends the appropriate response. It also sends the event payload to another Lambda function that handles all of the command's logic! I may change my current fix to use AWS SNS instead to help make my code more scalable and asynchronous.
+
 I had to create a DynamoDB table to store Slack workspace ID's for each user that installed the app. These ID's were saved and retrieved within my OAuth lambda function. 
 <hr>
 <img src="table.png" height="150"></img>
