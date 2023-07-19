@@ -34,6 +34,10 @@ def get_token_for_team(team):
     return response['Items'][0]["token"]
 
 def lambda_handler(event, context):
+    # ACK request from Slack and respond, send work to kiSendSNSWorker
+    # to process the messages.
+    print(event)
+
     event = base64.b64decode(event["body"])
     event = parse_qs(event.decode("utf-8"))
 
@@ -64,16 +68,19 @@ def lambda_handler(event, context):
     count = len(channel_ids)
     msg_len = len(msg.split(" ")) 
     msg = msg.split(" ")[-(msg_len-count):] 
-    msg = ' '.join(msg) 
+    msg = ' '.join(msg)
     
-    # TODO send message to request channel(s), notify user what was sent and which channels received it
-    print(f"msg: {msg}")
-    print(f"channel_ids: {channel_ids}")
-    SLACK_MSG = msg 
-    #client = WebClient(token=os.environ.get("SLACK_BOT_TOKEN"))
-    client = WebClient(token=SLACK_BOT_TOKEN)
-    for i in range(len(channel_ids)):
-        client.chat_postMessage(channel=channel_ids[i], text=SLACK_MSG)
+    # send msg and channel_ids to kiSendWorker via SNS 
+    # publish SNS message to delegate the actual work to worker lambda function
+    message = {
+        "msg": msg,
+        "channel_ids": channel_ids,
+        "team_id": SLACK_BOT_TOKEN
+    }
+
+    lambda_client = boto3.client('lambda')
+    invoke_response = lambda_client.invoke(FunctionName="kiSendWorker", InvocationType="Event", Payload=json.dumps(message))
+    print(invoke_response)
     
     return {
         'statusCode': 200,
